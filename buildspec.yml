@@ -10,8 +10,7 @@ phases:
     commands:
       - echo "Setting up kubeconfig with IAM token"
       - aws eks update-kubeconfig --region us-east-1 --name hilarious-pop-dinosaur
-      - export KUBECONFIG=/root/.kube/config
   build:
     commands:
       - echo "Deploying with Helm"
-      - helm upgrade --install nginx-demo . --wait
+      - helm upgrade --install nginx-demo . --namespace default --create-namespace --wait
