@@ -13,4 +13,4 @@ phases:
   build:
     commands:
       - echo "Deploying with Helm"
-      - helm upgrade --install helm . --namespace default --create-namespace
+      - helm upgrade --install helm -f values.yaml .
