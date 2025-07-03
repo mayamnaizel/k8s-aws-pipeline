@@ -7,8 +7,9 @@ phases:
     commands:
       - echo Installing Helm...
       - curl -sSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-      - echo Installing kubectl...
-      - curl -LO "https://s3.us-west-2.amazonaws.com/amazon-eks/1.28.2/2023-10-03/bin/linux/amd64/kubectl"
+      - echo Installing kubectl using yum...
+      - yum install -y gettext
+      - curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.28.2/2023-10-03/bin/linux/amd64/kubectl
       - chmod +x kubectl
       - mv kubectl /usr/local/bin/
 
@@ -17,6 +18,7 @@ phases:
       - echo Logging in to Amazon EKS cluster...
       - aws sts get-caller-identity
       - aws eks update-kubeconfig --region us-east-1 --name hilarious-pop-dinosaur
+      - kubectl version --client
       - kubectl get nodes
 
   build:
