@@ -2,25 +2,19 @@ version: 0.2
 
 phases:
   install:
+    runtime-versions:
+      python: 3.11
     commands:
-      - echo Installing kubectl
-      - curl -o kubectl https://s3.us-east-1.amazonaws.com/amazon-eks/1.28.2/2023-10-13/bin/linux/amd64/kubectl
-      - chmod +x ./kubectl
-      - mv ./kubectl /usr/local/bin/kubectl
-      - echo Installing Helm
-      - curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+      - curl -sSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+      - curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.28.2/2023-10-03/bin/linux/amd64/kubectl
+      - chmod +x kubectl && mv kubectl /usr/local/bin/
   pre_build:
     commands:
-      - echo Setting up kubeconfig and credentials
-      - export KUBECONFIG=$HOME/.kube/config
+      - echo Logging into EKS...
+      - aws sts get-caller-identity
       - aws eks update-kubeconfig --region us-east-1 --name hilarious-pop-dinosaur
-      - export AWS_ACCESS_KEY_ID=$(echo $AWS_ACCESS_KEY_ID)
-      - export AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY)
-      - export AWS_SESSION_TOKEN=$(echo $AWS_SESSION_TOKEN)
-      - echo Verifying cluster access
-      - kubectl get svc || true
+      - kubectl get nodes
   build:
     commands:
       - echo Deploying with Helm
       - helm upgrade --install nginx-demo . --namespace default --create-namespace
-
