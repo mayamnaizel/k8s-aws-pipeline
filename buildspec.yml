@@ -11,8 +11,11 @@ phases:
       - curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
   pre_build:
     commands:
-      - echo Updating kubeconfig
+      - echo Configuring EKS kubeconfig
+      - export KUBECONFIG=$HOME/.kube/config
       - aws eks update-kubeconfig --region us-east-1 --name hilarious-pop-dinosaur
+      - echo Testing EKS connectivity
+      - kubectl get nodes || true
   build:
     commands:
       - echo Deploying with Helm
