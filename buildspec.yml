@@ -5,16 +5,25 @@ phases:
     runtime-versions:
       python: 3.11
     commands:
+      - echo Installing Helm...
       - curl -sSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+      - echo Installing kubectl...
       - curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.28.2/2023-10-03/bin/linux/amd64/kubectl
-      - chmod +x kubectl && mv kubectl /usr/local/bin/
+      - chmod +x kubectl
+      - mv kubectl /usr/local/bin/
+
   pre_build:
     commands:
-      - echo Logging into EKS...
+      - echo Logging in to Amazon EKS cluster...
       - aws sts get-caller-identity
       - aws eks update-kubeconfig --region us-east-1 --name hilarious-pop-dinosaur
       - kubectl get nodes
+
   build:
     commands:
-      - echo Deploying with Helm
+      - echo Deploying with Helm...
       - helm upgrade --install nginx-demo . --namespace default --create-namespace
+
+artifacts:
+  files:
+    - '**/*'
