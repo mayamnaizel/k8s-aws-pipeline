@@ -22,4 +22,5 @@ phases:
   build:
     commands:
       - echo Deploying with Helm
-      - helm upgrade --install nginx-demo . --namespace default --create-namespace --wait
+      - helm upgrade --install nginx-demo . --namespace default --create-namespace
+
